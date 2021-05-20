@@ -1,0 +1,65 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>To Do List</title>
+  <!-- <script defer src="./node_modules/@fortawesome/fontawesome-free/js/all.js"></script> -->
+  <meta name="description" content="">
+  <meta name="author" content="BLee">
+  <link rel="stylesheet" href="../src/styles.css">
+
+</head>
+
+<body>
+  <div id="content">
+
+    <div id="header">
+      <form id="searchBar">
+        <input type="search" placeholder="Search for...">
+        <button>Search</button>
+      </form>
+    </div>
+
+
+    <div id="main">
+      <div id="left">
+        <div id="lists">
+          <div class="list-selector" data-list="All">All </div>
+        </div>
+      </div>
+      <div id="center">
+        <div id="todoDisplay"></div>
+      </div>
+      <div id="right">
+        <form id="addTodoForm">
+
+          <label for="addTodo">
+            <input for="title" id="todoTitle" placeholder="title">
+            <input for="description" id="description" type="text" placeholder="description">
+            <label for="dueDate">
+            <input for="dueDate" id="dueDate" type="date">
+            </label>
+
+            <div>
+              <input for="high" type="radio" checked="yes" name="priority" value="high">High
+              <input for="medium" type="radio" name="priority" value="medium">Medium
+              <input for="low" type="radio" name="priority" value="low">Low
+            </div>
+
+          </label>
+
+          <button type="submit">Add Todo</button>
+        </form>
+      </div>
+
+
+
+    </div>
+  </div>
+
+  <!-- <script src="../src/index.js"></script> -->
+  <script src="bundle.js"></script>
+</body>
+</html>
