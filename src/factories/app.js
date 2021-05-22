@@ -11,11 +11,19 @@ class App {
       }
       this.lists.push(list);
     }
+
     this.setCurrentList = (list) => {
       if (this.lists.some((ele) => ele.name === list.name)) {
         this.currentList = list;
       }
     }
+
+    this.getList = (listName) => {
+      const list = this.lists.filter((list) => list.name === listName);
+      return list[0];
+    }
+
+
   }
 }
 

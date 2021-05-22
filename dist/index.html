@@ -5,7 +5,10 @@
   <meta charset="utf-8">
 
   <title>To Do List</title>
-  <!-- <script defer src="./node_modules/@fortawesome/fontawesome-free/js/all.js"></script> -->
+  <script defer src="../node_modules/@fortawesome/fontawesome-free/js/all.js"></script>
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
   <meta name="description" content="">
   <meta name="author" content="BLee">
   <link rel="stylesheet" href="../src/styles.css">
@@ -17,16 +20,16 @@
 
     <div id="header">
       <form id="searchBar">
-        <input type="search" placeholder="Search for...">
-        <button>Search</button>
+        <input type="search" id="searchInput" placeholder="Search for...">
+        <button id="searchBtn"><i class="fas fa-search"></i></button>
       </form>
     </div>
 
 
     <div id="main">
       <div id="left">
+        <!-- <button id="showCurrentList">Show Current List</button> -->
         <div id="lists">
-          <div class="list-selector" data-list="All">All </div>
         </div>
       </div>
       <div id="center">

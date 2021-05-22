@@ -1,7 +1,9 @@
 class List {
   constructor(name) {
-    name = name || "default";
+    this.name = name || "default";
     this.items = [];
+
+    this.getItems = () => items;
 
     this.getName = () => name;
     this.getItemsLength = () => items.length;
@@ -18,9 +20,11 @@ class List {
       this.items.push(todo);
     };
 
-    this.deleteTodo = (todo) => {
+    this.deleteTodo = (todoID) => {
+      const todo = this.items.filter((item) => item.uuid === todoID)[0];
       const index = this.items.indexOf(todo);
       if (index > - 1) this.items.splice(index, 1);
+      console.log(todo, index, this.items);
     };
   }
 };

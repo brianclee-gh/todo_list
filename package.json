@@ -17,6 +17,8 @@
     "webpack-cli": "^4.2.0"
   },
   "dependencies": {
-    "lodash": "^4.17.20"
+    "@fortawesome/fontawesome-free": "^5.15.3",
+    "lodash": "^4.17.20",
+    "uuid": "^8.3.2"
   }
 }
