@@ -50,6 +50,7 @@ table {
 
 /* Content */
 
+
 #content {
 	display: flex;
 	flex-direction: column;
@@ -88,6 +89,7 @@ table {
 	justify-content: space-between;
 }
 
+
 #searchInput {
 	width: 90%;
 	border: 1px solid rgba(0, 0, 0, 0);
@@ -95,6 +97,7 @@ table {
 	margin: 0;
 	padding: 0.4rem 0.8rem;
 	/* border-radius: 16px; */
+	opacity: 0.7;
 }
 
 #searchBtn {
@@ -105,14 +108,11 @@ textarea {
 	height: 100%;
 }
 
-/* textarea:focus {
-	border: 1px solid rgba(0, 0, 0, 0);
-} */
-
 #searchInput:focus {
 	outline: none !important;
 	border: 0.5px solid blue;
 	/* box-shadow: 0 0 10px #719ECE; */
+	opacity: 1.0;
 }
 
 #searchBar button {
@@ -123,7 +123,6 @@ textarea {
 /* Main */
 
 #left, #right, #center {
-	border-right: 1px solid black;
 	border-top: 1px solid black;
 	height: 100vh;
 }
@@ -131,6 +130,8 @@ textarea {
 #left {
 	flex: 3;
 	min-width: 150px;
+	max-width: 175px;
+	box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.1);
 }
 
 #center {
@@ -143,8 +144,8 @@ textarea {
 	flex: 4;
 	display: flex;
 	flex-direction: column;
-	padding: 1rem;
 	mid-width: 200px;
+	box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.1);
 }
 
 
@@ -174,7 +175,7 @@ textarea {
 }
 
 .listsLeft {
-	margin-left: 1rem;
+	margin-left: 1.5rem;
 	margin-right: 1rem;
 	width: 20px;
 	pointer-events:none;
@@ -223,6 +224,52 @@ textarea {
 
 /* Cards */
 
+#todoDisplay {
+	display: flex;
+	flex-direction: column;
+	margin: 1.5rem;
+	/* border: 1px solid black; */
+	box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.1);
+	border-radius: 5px;
+	height: 80vh;
+	background-color: white;
+	transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+}
+
+/* Tasks Header */
+
+#taskHeader {
+	font-size: 25px;
+	font-weight: bold;
+	padding: 1rem;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
+
+#sort-btn {
+	background-color: white;
+	border: none;
+	cursor: pointer;
+	opacity: 0.8;
+	transition: all 0.3s ease;
+	color: #26a69a;
+	font-size: 15px;
+	padding: 0.4rem;
+	border-radius: 5px;
+}
+
+#sort-btn:hover {
+	background-color: #26a6995e;
+}
+
+/* Task List */
+
+#tasklist {
+	box-shadow: 0 2p 10px 0 rgb(0 0 0 / 10%);
+	padding: 0 0.5rem;
+}
+
 .todoCard {
 	height: 50px;
 	display: flex;
@@ -230,9 +277,8 @@ textarea {
 	transition: all 0.3s cubic-bezier(.25,.8,.25,1);
 	margin: 0.4rem 0.4rem;
 	background-color: white;
+	border-radius: 5px;
 }
-
-
 
 .todoCard:hover {
 	box-shadow: 0 5px 8px rgba(0,0,0,0.25), 0 3px 3px rgba(0,0,0,0.22);
@@ -240,6 +286,8 @@ textarea {
 
 .priority {
 	flex: 1;
+	border-bottom-left-radius: 5px;
+	border-top-left-radius: 5px;
 }
 
 .high {
@@ -356,4 +404,76 @@ textarea {
 
 .deleteBtn {
 	color: #f44336;
+}
+
+/* Right sidebar */
+
+#right {
+	font-family: 'Roboto', sans-serif;
+}
+
+#addTodoForm {
+	margin-top: 1rem;
+	display: flex;
+	flex-direction: column;
+}
+
+#todoTitle,
+#description,
+#dueDate	{
+	width: 80%;
+	margin: 0.5rem 1rem;
+	padding: 0.5rem;
+	border-radius: 5px;
+	border:1px solid rgba(5, 5, 5, 5);
+	font-family: 'Roboto', sans-serif;
+}
+
+#todoTitle,
+#description {
+	text-align: center;
+}
+
+#selectPriority {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 12px;
+}
+
+#selectPriority > input {
+	margin: 0.2rem 0.5rem;
+
+}
+
+#submitbtn-container {
+	margin-top: 0.5rem;
+	display: flex;
+	justify-content: center;
+}
+
+#submitbtn {
+	padding: 8px;
+	background-color: #4caf50;
+	border-radius: 5px;
+	border: 0.2px solid white;
+	color: white;
+	cursor: pointer;
+}
+
+#submitbtn:hover {
+	opacity: 0.8;
+}
+
+#listSelect {
+	border: 0.2 solid black;
+	border-radius: 5px;
+	font-family: 'Roboto', sans-serif;
+	margin-top: 0.4rem;
+	width: 60%;
+}
+
+#listSelectContainer {
+	display: flex;
+	justify-content: center;
 }

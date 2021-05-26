@@ -29,4 +29,5 @@ const addEventListenerList = (nodeList, event, fn) => {
   }
 };
 
+
 module.exports = { getCheckedRadio, returnFormValue, printTarget, addEventListenerList }

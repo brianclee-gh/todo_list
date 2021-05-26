@@ -1,3 +1,23 @@
+const formatDateEnding = (date) => {
+  const dateEnd = parseInt(date.split(' ')[1]);
+
+  if (dateEnd === 1 || dateEnd === 21) { return 'st'; }
+  if (dateEnd === 2 || dateEnd === 22) { return 'nd'; }
+  if (dateEnd === 3 || dateEnd === 23) { return 'rd'; }
+  return 'th';
+};
+
+const formatDate = (dateInput) => {
+  const date = dateInput === '' ? new Date() : new Date(dateInput + 'PST');
+  const options = {
+    month: 'short',
+    day: 'numeric',
+    // year: 'numeric'
+  };
+  let newDate =  date.toLocaleDateString('en-US', options);
+  return newDate + formatDateEnding(newDate);
+};
+
 const createTodoCard = (todo) => {
   const card = document.createElement('div');
   card.setAttribute('class', 'todoCard');
@@ -64,7 +84,7 @@ const createCheckBox = () => {
 const createDate = (dueDate) => {
   const date = document.createElement('div');
   date.setAttribute('class', 'todoDate');
-  date.innerHTML = dueDate;
+  date.innerHTML = formatDate(dueDate);
   return date;
 }
 
@@ -89,6 +109,6 @@ const createDescription = (desc) => {
   description.setAttribute('class', 'description');
   description.innerHTML = desc;
   return description;
-}
+};
 
 module.exports = { createCardBtns, createTodoCard }

@@ -2,15 +2,47 @@ import { getCheckedRadio, returnFormValue, printTarget, addEventListenerList } f
 import { createCardBtns, createTodoCard } from './modules/cardHelpers'
 import { App } from './factories/app'
 import { List } from './factories/list'
-// import { TodoItem } from './factories/todoitem'
 import { v4 as uuidv4 } from 'uuid'
 
 
 // TODO:
 // Local storage
-// All
-// Format Right sidebar
+// "Today"
 // Edit
+// Sort by
+
+// LS
+
+const storageAvailable = (type) => {
+  var storage;
+  try {
+      storage = window[type];
+      var x = '__storage_test__';
+      storage.setItem(x, x);
+      storage.removeItem(x);
+      return true;
+  }
+  catch(e) {
+      return e instanceof DOMException && (
+          // everything except Firefox
+          e.code === 22 ||
+          // Firefox
+          e.code === 1014 ||
+          // test name field too, because code might not be present
+          // everything except Firefox
+          e.name === 'QuotaExceededError' ||
+          // Firefox
+          e.name === 'NS_ERROR_DOM_QUOTA_REACHED') &&
+          // acknowledge QuotaExceededError only if there's something already stored
+          (storage && storage.length !== 0);
+  }
+}
+
+const populateStorage = () => {
+  localStorage.setItem('app', app);
+
+  const testApp = localStorage.getItem('app');
+}
 
 // Factories
 
@@ -18,7 +50,7 @@ class TodoItem {
   constructor(name, description, dueDate, priority) {
     this.name = name;
     this.description = description || "";
-    this.dueDate = dueDate || "tomorrow";
+    this.dueDate = dueDate || new Date();
     this.priority = priority || "low";
     this.done = false;
     this.uuid = uuidv4();
@@ -27,33 +59,12 @@ class TodoItem {
 
 // HANDLE CREATION
 
-const formatDateEnding = (date) => {
-  const dateEnd = parseInt(date.split(' ')[1]);
-
-  if (dateEnd === 1 || dateEnd === 21) { return 'st'; }
-  if (dateEnd === 2 || dateEnd === 22) { return 'nd'; }
-  if (dateEnd === 3 || dateEnd === 23) { return 'rd'; }
-  return 'th';
-};
-
-const formatDate = (dateInput) => {
-  const date = dateInput === '' ? new Date() : new Date(dateInput + 'PST');
-  const options = {
-    month: 'short',
-    day: 'numeric',
-    // year: 'numeric'
-  };
-  let newDate =  date.toLocaleDateString('en-US', options);
-  return newDate + formatDateEnding(newDate);
-};
-
 const createNewTodo = () => {
 
   const todoTitle = returnFormValue('todoTitle');
   const description = returnFormValue('description');
-  // const dueDate = new Date(returnFormValue('dueDate'));
-  const dueDate = formatDate(returnFormValue('dueDate'))
-  // const dueDate = (returnFormValue('dueDate') !== '') ? formatDate(returnFormValue('dueDate')) : '';
+  // const dueDate = formatDate(returnFormValue('dueDate'));
+  const dueDate = returnFormValue('dueDate');
   const priority = getCheckedRadio('priority');
 
   if (todoTitle === null || todoTitle === '') { return; }
@@ -67,9 +78,11 @@ const createNewTodo = () => {
 const handleFormSubmit = () => {
 
   const newTodo = createNewTodo();
+  const selectedList = returnFormValue('listSelect');
+  const targetList = app.lists.filter((list) => list.name === selectedList)[0];
 
   if (newTodo) {
-    currentList.addTodo(newTodo);
+    targetList.addTodo(newTodo);
     refreshTodos();
     addCardListeners();
   }
@@ -78,22 +91,42 @@ const handleFormSubmit = () => {
 
 // VIEW
 
-const refreshTodos = () => {
-  const display = document.getElementById('todoDisplay');
+const changeListHeader = () => {
+  const listHeader = document.getElementById('listHeader');
+  listHeader.innerHTML = currentList.name;
+};
 
+const refreshTodos = () => {
+  const display = document.getElementById('tasklist');
   display.innerHTML = '';
 
-  if (currentList.items.length === 0) { return }
-
-  currentList.items.forEach((item) => {
-    display.appendChild(createTodoCard(item));
-  })
+  if (currentList.name === 'All') { refreshAll(display) }
+  if (currentList.name !== 'All') { refreshCurrent(display, currentList) }
 
 };
 
+const refreshCurrent = (display, list) => {
+  list.items.forEach((item) => {
+    display.appendChild(createTodoCard(item));
+  })
+};
+
+const refreshAll = (display) => {
+  app.lists.forEach(list => {
+    refreshCurrent(display, list);
+  })
+};
+
 const handleCheckboxClick = (todoID) => {
-  const todo = currentList.items.filter((item) => item.uuid === todoID)[0];
-  console.log(todo)
+  let todo;
+  if (currentList.name !== 'All') {
+    todo = currentList.items.find((item) => item.uuid === todoID);
+  } else {
+    todo = app.lists.map(list => {
+      list.items.find((item) => item.uuid === todoID);
+    })
+  }
+
   todo.done = todo.done ? false : true;
 };
 
@@ -104,6 +137,20 @@ const titleStrike = (todoID) => {
 
 const removeCard = (node) => {
   node.remove();
+};
+
+const deleteItem = (todoID) => {
+  if (currentList.name !== 'All') {
+    currentList.deleteTodo(todoID);
+  } else {
+    const targetList = app.lists.find((list) => {
+      if (list.items.find(item => item.uuid === todoID)) {
+        return list;
+      }
+    })
+
+    targetList.deleteTodo(todoID);
+  }
 };
 
 // INITIAL
@@ -123,7 +170,7 @@ const addCardListeners = () => {
     const node = e.target.closest('.todoCard')
     const todoID = e.target.closest('.todoCard').getAttribute('data-uuid');
     removeCard(node); // view
-    currentList.deleteTodo(todoID); // model
+    deleteItem(todoID); // model
   });
 
   // expand cards on click (needs reload on every re-render of todos)
@@ -143,7 +190,12 @@ const addListeners = () => {
   const addTodoForm = document.getElementById('addTodoForm');
   addTodoForm.addEventListener('submit', function(e) {
     e.preventDefault();
+    if (!returnFormValue('todoTitle') || !returnFormValue('listSelect')) {
+      alert('Enter a Title!');
+      return;
+    };
     handleFormSubmit();
+    addTodoForm.reset();
   });
 
   // select active list on left
@@ -151,8 +203,10 @@ const addListeners = () => {
   addEventListenerList(listSelectors, 'click', function(e) {
     // set new currentList
     currentList = (app.getList(e.target.dataset.list));
+    changeListHeader();
     // refresh todos
     refreshTodos();
+    addCardListeners();
   });
 
 };
@@ -188,6 +242,17 @@ const populateLeft = () => {
   });
 };
 
+
+const createDropdown = (listname) => {
+  const dropdownItem = document.createElement('div');
+  dropdownItem.innerHTML = listname;
+  dropdownItem.setAttribute('data-dropdown', listname);
+
+  return dropdownItem;
+};
+
+
+
 const addDefaultLists = () => {
   let all = new List('All');
   let work = new List('Work');
@@ -213,12 +278,21 @@ const initialize = () => {
   addListeners();
   addCardListeners();
 
+  if (storageAvailable('localStorage')) {
+    // Yippee! We can use localStorage awesomeness
+    console.log('yay')
+    populateStorage();
+  }
+  else {
+    // Too bad, no localStorage for us
+  }
+
 };
 
 const addSampleTodos = () => {
-  const sampleH = new TodoItem('Bills', 'Water bill', 'May 20th', 'high');
-  const sampleM = new TodoItem('Homework', 'Assignment #13', 'Jun 13th', 'medium');
-  const sampleL = new TodoItem('Ab Workout', '5x crunches', 'Jun 14th', 'low');
+  const sampleH = new TodoItem('Bills', 'Water bill', '', 'high');
+  const sampleM = new TodoItem('Homework', 'Assignment #13', '', 'medium');
+  const sampleL = new TodoItem('Ab Workout', '5x crunches', '', 'low');
   currentList.addTodo(sampleH);
   currentList.addTodo(sampleM);
   currentList.addTodo(sampleL);

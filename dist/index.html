@@ -33,27 +33,45 @@
         </div>
       </div>
       <div id="center">
-        <div id="todoDisplay"></div>
+        <div id="todoDisplay">
+          <div id="taskHeader">
+            <h2 id="listHeader">Work</h2>
+            <button id="sort-btn">Sort By</button>
+          </div>
+          <div id="tasklist"></div>
+        </div>
       </div>
       <div id="right">
         <form id="addTodoForm">
 
-          <label for="addTodo">
-            <input for="title" id="todoTitle" placeholder="title">
-            <input for="description" id="description" type="text" placeholder="description">
-            <label for="dueDate">
+          <label for="addTodo"></label>
+            <input for="title" id="todoTitle" placeholder="TITLE">
+            <input for="description" id="description" type="textArea" placeholder="DESCRIPTION">
+            <label for="dueDate"></label>
             <input for="dueDate" id="dueDate" type="date">
-            </label>
 
-            <div>
+            <div id="selectPriority">
               <input for="high" type="radio" checked="yes" name="priority" value="high">High
               <input for="medium" type="radio" name="priority" value="medium">Medium
               <input for="low" type="radio" name="priority" value="low">Low
             </div>
 
-          </label>
+            <div id="listSelectContainer">
+              <select id="listSelect" name="list">
+                <option value="" disabled selected>Select a list to add to</option>
+                <option value="Work">Work</option>
+                <option value="School">School</option>
+                <option value="Church">Church</option>
+              </select>
+            </div>
 
-          <button type="submit">Add Todo</button>
+
+            <div id="submitbtn-container">
+              <button id="submitbtn" type="submit">ADD TODO</button>
+            </div>
+
+          </div>
+
         </form>
       </div>
 
