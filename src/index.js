@@ -10,7 +10,7 @@ import { v4 as uuidv4 } from 'uuid'
 // TODO:
 // High:
 // > Search
-// > Sort by
+// > Sort by (A -> Z, date)
 
 // Low
 // > Dates
@@ -186,7 +186,18 @@ const transferTodo = (list1, list2, todo) => {
 
 const handleSearch = () => {
   const search = returnFormValue('searchInput');
-  console.log(search);
+  // search all lists, return item titles...
+  let results = [];
+  app.lists.forEach((list) => {
+    list.items.forEach((item => {
+      if (item.name === search) {
+        results.push(item)
+      }
+    }))
+  })
+
+  console.log(results);
+  return results;
 };
 
 const findTodoList = (todoID) => {
@@ -234,6 +245,7 @@ const addCardListeners = () => {
   addEventListenerList(editTodoBtn, 'click', function(e) {
     const node = e.target.closest('.todoCard');
     handleEditTodo(node);
+    populateStorage();
   });
 
   const deleteTodoBtn = document.querySelectorAll('.deleteBtn');
@@ -258,7 +270,18 @@ const addCardListeners = () => {
 };
 
 const getTodoItem = (todoID) => {
-  return currentList.items.find((item) => item.uuid === todoID);
+  const foundTodo = []
+  app.lists.forEach((list) => {
+    list.items.forEach((item) => {
+      if (item.uuid === todoID) {
+        foundTodo.push(item);
+        return;
+      }
+    })
+  })
+
+  // return currentList.items.find((item) => item.uuid === todoID);
+  return foundTodo[0];
 };
 
 const handleEditTodoSubmit = () => {
@@ -266,11 +289,14 @@ const handleEditTodoSubmit = () => {
   updateTodo(todoID);
   refreshTodos();
   addCardListeners();
+  populateStorage();
 };
 
 const updateTodo = (todoID) => {
   // updates target todo with edit form submission
+
   const targetTodo = getTodoItem(todoID);
+  console.log(targetTodo, todoID);
   if (returnFormValue('editTitle')) targetTodo.setName(returnFormValue('editTitle'));
   if (returnFormValue('editDescription')) targetTodo.setDescription(returnFormValue('editDescription'));
   if (returnFormValue('editDueDate')) targetTodo.setDueDate(returnFormValue('editDueDate'));
