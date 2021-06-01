@@ -1,14 +1,38 @@
 const formatDateEnding = (date) => {
   const dateEnd = parseInt(date.split(' ')[1]);
 
-  if (dateEnd === 1 || dateEnd === 21) { return 'st'; }
+  if (dateEnd === 1 || dateEnd === 21 || dateEnd === 31) { return 'st'; }
   if (dateEnd === 2 || dateEnd === 22) { return 'nd'; }
   if (dateEnd === 3 || dateEnd === 23) { return 'rd'; }
   return 'th';
 };
 
+const checkToday = (date) => {
+  const todaysDate = new Date();
+  const inputDate = new Date(date);
+  return (todaysDate.setHours(0,0,0,0) == inputDate.setHours(0,0,0,0));
+};
+
+const checkYesterday = (date) => {
+  const inputDate = new Date(date);
+  yesterday = ( function(){this.setDate(this.getDate()-1); return this} )
+            .call(new Date);
+  return (yesterday.setHours(0,0,0,0) == inputDate.setHours(0,0,0,0));
+};
+
+const checkTomorrow = (date) => {
+  const inputDate = new Date(date);
+  tomorrow = ( function(){this.setDate(this.getDate()+1); return this} )
+            .call(new Date);
+  return (tomorrow.setHours(0,0,0,0) == inputDate.setHours(0,0,0,0));
+};
+
 const formatDate = (dateInput) => {
   const date = dateInput === '' ? new Date() : new Date(dateInput + 'PST');
+  // if it's Today, just return 'Today'
+  if (checkToday(date)) { return 'Today' }
+  if (checkYesterday(date)) { return 'Yesterday' }
+  if (checkTomorrow(date)) { return 'Tomorrow' }
   const options = {
     month: 'short',
     day: 'numeric',

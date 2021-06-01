@@ -10,7 +10,8 @@ class List {
 
     this.addTodos = (array, Todo) => {
       this.items = array.map(item => new Todo(item.name, item.description,
-        item.dueDate, item.priority))
+        item.dueDate, item.priority, item.done))
+
     };
 
     this.addTodo = (todo) => {
@@ -23,6 +24,10 @@ class List {
       }
 
       this.items.push(todo);
+    };
+
+    this.clearCompleted = () => {
+      this.items = this.items.filter((item) => !item.done)
     };
 
     this.deleteTodo = (todoID) => {

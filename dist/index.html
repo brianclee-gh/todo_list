@@ -36,8 +36,15 @@
           <div id="taskHeader">
             <h2 id="listHeader">Work</h2>
             <button id="sort-btn">Sort By</button>
+            <button id="clear-btn">Clear Completed</button>
           </div>
           <div id="tasklist"></div>
+          <div id="mobile-add-container">
+            <form id="mobile-add-form">
+              <input for="title" id="mobileTitle" placeholder="What needs to be done?" />
+              <button id="mobile-submit">^</button>
+            </form>
+          </div>
         </div>
         <div id="modal">
           <div id="modal-content">
@@ -87,7 +94,7 @@
           <input for="title" id="todoTitle" placeholder="TITLE">
           <input for="description" id="description" type="textArea" placeholder="DESCRIPTION">
           <label for="dueDate"></label>
-          <input for="dueDate" id="dueDate" type="date">
+          <input for="dueDate" id="dueDate" type="datetime-local">
 
           <div id="selectPriority">
             <input for="low" type="radio" name="priority" value="low">Low
@@ -97,8 +104,8 @@
 
           <div id="listSelectContainer">
             <select id="listSelect" name="list">
-              <option value="" disabled selected>Select a list to add to</option>
-              <option value="Work">Work</option>
+              <option value="" disabled>Select a list to add to</option>
+              <option value="Work" selected>Work</option>
               <option value="School">School</option>
               <option value="Church">Church</option>
             </select>

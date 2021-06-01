@@ -1,7 +1,7 @@
 import { getCheckedRadio, returnFormValue, printTarget, addEventListenerList } from './modules/helpers'
 import { createCardBtns, createTodoCard } from './modules/cardHelpers'
 import { populateLeft, createDropdown } from './modules/creators'
-import { titleStrike, removeCard } from './modules/view'
+import { titleStrike, removeCard, paginate } from './modules/view'
 import { App } from './factories/app'
 import { List } from './factories/list'
 import { v4 as uuidv4 } from 'uuid'
@@ -10,9 +10,9 @@ import { v4 as uuidv4 } from 'uuid'
 // TODO:
 // High:
 // > Sort by (A -> Z, date)
+// Pages (~ 9 per page)
 
 // Low
-// > Dates
 // > "Today"
 
 // LS
@@ -53,12 +53,12 @@ const getStorage = () => {
 // Factories
 
 class TodoItem {
-  constructor(name, description, dueDate, priority) {
+  constructor(name, description, dueDate, priority, done) {
     this.name = name;
     this.description = description || "";
     this.dueDate = dueDate || new Date();
     this.priority = priority || "low";
-    this.done = false;
+    this.done = done || false;
     this.uuid = uuidv4();
   }
 
@@ -138,15 +138,26 @@ const changeSearchHeader = (phrase) => {
 const refreshSearch = (results) => {
   const display = document.getElementById('tasklist');
   display.innerHTML = '';
+
   results.forEach((item) => {
     display.appendChild(createTodoCard(item));
   })
 };
 
 const refreshCurrent = (display, list) => {
-  list.items.forEach((item) => {
+  let items;
+  if (list.items.length < 9) {
+    items = list.items
+  } else {
+    const pages = Math.floor(list.items.length / 8) +  1;
+    items = paginate(list.items, 8, 1);
+    console.log('need ' + pages + ' pages!');
+  }
+
+  items.forEach((item) => {
     display.appendChild(createTodoCard(item, list));
   })
+
 };
 
 const refreshAll = (display) => {
@@ -160,12 +171,11 @@ const handleCheckboxClick = (todoID) => {
   if (currentList.name !== 'All') {
     todo = currentList.items.find((item) => item.uuid === todoID);
   } else {
-    todo = app.lists.map(list => {
-      list.items.find((item) => item.uuid === todoID);
-    })
+    const list = findTodoList(todoID);
+    todo = list.items.find((item) => item.uuid === todoID);
   }
 
-  todo.done = todo.done ? false : true;
+  todo.toggleDone();
 };
 
 const showModal = () => {
@@ -181,6 +191,17 @@ const populateModal = (todo) => {
 };
 
 // Model
+
+const removeCompleted = () => {
+
+  app.lists.forEach((list) => {
+    list.clearCompleted();
+  })
+
+  refreshTodos();
+  addCardListeners();
+  populateStorage();
+};
 
 const handleListChange = (todoID, targetTodo, selectedList) => {
   const todoCurrentList = findTodoList(todoID);
@@ -202,6 +223,7 @@ const handleSearch = () => {
 
   refreshSearch(result);
   changeSearchHeader(search);
+  addCardListeners();
 };
 
 const regexTokens = (input) => {
@@ -226,7 +248,10 @@ const regexSearch = () => {
     list.items.forEach((item) => {
       let itemStr = '';
       itemStr += item.name.toLowerCase().trim() + ' ' + item.description.toLowerCase().trim()
-      if (itemStr.match(tokenRegex)) results.push(item);
+      if (itemStr.match(tokenRegex)) {
+        results.push(item)
+
+      };
     })
   })
 
@@ -243,13 +268,8 @@ const findTodoList = (todoID) => {
 };
 
 const deleteItem = (todoID) => {
-  if (currentList.name !== 'All') {
-    currentList.deleteTodo(todoID);
-  } else {
-    const targetList = findTodoList(todoID);
-
-    targetList.deleteTodo(todoID);
-  }
+  const targetList = findTodoList(todoID);
+  targetList.deleteTodo(todoID);
 };
 
 const handleEditTodo = (node) => {
@@ -304,18 +324,8 @@ const addCardListeners = () => {
 };
 
 const getTodoItem = (todoID) => {
-  const foundTodo = []
-  app.lists.forEach((list) => {
-    list.items.forEach((item) => {
-      if (item.uuid === todoID) {
-        foundTodo.push(item);
-        return;
-      }
-    })
-  })
-
-  // return currentList.items.find((item) => item.uuid === todoID);
-  return foundTodo[0];
+  const targetList = findTodoList(todoID);
+  return targetList.items.find(item => item.uuid === todoID);
 };
 
 const handleEditTodoSubmit = () => {
@@ -330,7 +340,6 @@ const updateTodo = (todoID) => {
   // updates target todo with edit form submission
 
   const targetTodo = getTodoItem(todoID);
-  console.log(targetTodo, todoID);
   if (returnFormValue('editTitle')) targetTodo.setName(returnFormValue('editTitle'));
   if (returnFormValue('editDescription')) targetTodo.setDescription(returnFormValue('editDescription'));
   if (returnFormValue('editDueDate')) targetTodo.setDueDate(returnFormValue('editDueDate'));
@@ -359,6 +368,7 @@ const addListeners = () => {
     populateStorage();
   });
 
+  // edit Todo modal
   const editTodoForm = document.getElementById('modal-form');
   editTodoForm.addEventListener('submit', function(e) {
     e.preventDefault();
@@ -367,6 +377,7 @@ const addListeners = () => {
 
   })
 
+  // search
   const searchBar = document.getElementById('searchBar');
   searchBar.addEventListener('submit', function(e) {
     e.preventDefault();
@@ -385,9 +396,16 @@ const addListeners = () => {
     addCardListeners();
   });
 
+  //clear completed
+  const clearBtn = document.getElementById('clear-btn');
+  clearBtn.addEventListener('click', function() {
+    if (window.confirm("Do you really want to clear all completed items?")) {
+      removeCompleted();
+    }
+  })
 
   const closeModalBtn = document.getElementById('modal-close');
-  closeModalBtn.addEventListener('click', function(e) {
+  closeModalBtn.addEventListener('click', function() {
     modal.style.display = 'none';
   })
 
