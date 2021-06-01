@@ -9,7 +9,6 @@ import { v4 as uuidv4 } from 'uuid'
 
 // TODO:
 // High:
-// > Search
 // > Sort by (A -> Z, date)
 
 // Low
@@ -131,6 +130,19 @@ const refreshTodos = () => {
 
 };
 
+const changeSearchHeader = (phrase) => {
+  const listHeader = document.getElementById('listHeader');
+  listHeader.innerHTML = 'Results for ' + phrase;
+};
+
+const refreshSearch = (results) => {
+  const display = document.getElementById('tasklist');
+  display.innerHTML = '';
+  results.forEach((item) => {
+    display.appendChild(createTodoCard(item));
+  })
+};
+
 const refreshCurrent = (display, list) => {
   list.items.forEach((item) => {
     display.appendChild(createTodoCard(item, list));
@@ -186,18 +198,40 @@ const transferTodo = (list1, list2, todo) => {
 
 const handleSearch = () => {
   const search = returnFormValue('searchInput');
-  // search all lists, return item titles...
-  let results = [];
-  app.lists.forEach((list) => {
-    list.items.forEach((item => {
-      if (item.name === search) {
-        results.push(item)
-      }
-    }))
+  const result = regexSearch();
+
+  refreshSearch(result);
+  changeSearchHeader(search);
+};
+
+const regexTokens = (input) => {
+
+  const tokens = input
+                  .toLowerCase()
+                  .split(' ')
+                  .filter(function(token) {
+                    return token.trim() !== '';
+                  });
+
+  return new RegExp(tokens.join('|', 'gim'));
+
+};
+
+const regexSearch = () => {
+  const search = returnFormValue('searchInput');
+  const tokenRegex = regexTokens(search);
+
+  const results = []
+  app.lists.forEach(list => {
+    list.items.forEach((item) => {
+      let itemStr = '';
+      itemStr += item.name.toLowerCase().trim() + ' ' + item.description.toLowerCase().trim()
+      if (itemStr.match(tokenRegex)) results.push(item);
+    })
   })
 
-  console.log(results);
   return results;
+
 };
 
 const findTodoList = (todoID) => {

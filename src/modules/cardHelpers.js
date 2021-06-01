@@ -23,7 +23,7 @@ const createTodoCard = (todo, list) => {
   card.setAttribute('class', 'todoCard');
   if (todo.done) card.classList.add('strike');
   card.setAttribute('data-uuid', `${todo.uuid}`);
-  card.setAttribute('data-parentList', `${list.name}`);
+  if (list) card.setAttribute('data-parentList', `${list.name}`);
 
   const cardContainer = document.createElement('div');
   cardContainer.setAttribute('class', 'cardContainer');
