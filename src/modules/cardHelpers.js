@@ -18,11 +18,12 @@ const formatDate = (dateInput) => {
   return newDate + formatDateEnding(newDate);
 };
 
-const createTodoCard = (todo) => {
+const createTodoCard = (todo, list) => {
   const card = document.createElement('div');
   card.setAttribute('class', 'todoCard');
   if (todo.done) card.classList.add('strike');
   card.setAttribute('data-uuid', `${todo.uuid}`);
+  card.setAttribute('data-parentList', `${list.name}`);
 
   const cardContainer = document.createElement('div');
   cardContainer.setAttribute('class', 'cardContainer');
@@ -47,7 +48,7 @@ const createTodoCard = (todo) => {
   cardLeft.appendChild(checkbox);
   cardLeft.appendChild(title);
 
-  const date = createDate(todo.dueDate);
+  const date = createDate((new Date(todo.dueDate)));
   const buttons = createCardBtns();
 
   cardRight.appendChild(date);

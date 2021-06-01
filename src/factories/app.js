@@ -3,6 +3,10 @@ class App {
     this.lists = [];
     this.currentList;
 
+    this.addLists = (array, List) => {
+      this.lists = array.map(list => new List(list.name))
+    }
+
     this.addList = (list) => {
       let listExists = this.lists.some((ele) => ele.getName() === list.getName());
       if (listExists) {
@@ -19,8 +23,7 @@ class App {
     }
 
     this.getList = (listName) => {
-      const list = this.lists.filter((list) => list.name === listName);
-      return list[0];
+      return this.lists.find((list) => list.name === listName);
     }
 
 

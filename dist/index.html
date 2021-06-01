@@ -28,7 +28,6 @@
 
     <div id="main">
       <div id="left">
-        <!-- <button id="showCurrentList">Show Current List</button> -->
         <div id="lists">
         </div>
       </div>
@@ -40,47 +39,82 @@
           </div>
           <div id="tasklist"></div>
         </div>
-      </div>
-      <div id="right">
-        <form id="addTodoForm">
+        <div id="modal">
+          <div id="modal-content">
+            <div id="modal-container">
+              <form id="modal-form">
+                <label for="editTodo"></label>
+                <div id="todoEditing"></div>
+                <input for="title" id="editTitle" placeholder="TITLE">
+                <input for="description" id="editDescription" type="textArea" placeholder="DESCRIPTION">
+                <label for="dueDate"></label>
+                <input for="dueDate" id="editDueDate" type="date">
 
-          <label for="addTodo"></label>
-            <input for="title" id="todoTitle" placeholder="TITLE">
-            <input for="description" id="description" type="textArea" placeholder="DESCRIPTION">
-            <label for="dueDate"></label>
-            <input for="dueDate" id="dueDate" type="date">
+                <div id="editPriority">
+                  <input for="low" type="radio" name="editPriority" value="low">Low
+                  <input for="medium" type="radio" name="editPriority" value="medium">Medium
+                  <input for="high" type="radio" checked="yes" name="editPriority" value="high">High
+                </div>
 
-            <div id="selectPriority">
-              <input for="high" type="radio" checked="yes" name="priority" value="high">High
-              <input for="medium" type="radio" name="priority" value="medium">Medium
-              <input for="low" type="radio" name="priority" value="low">Low
+                <div id="listEditContainer">
+                  <select id="editListSelect" name="list">
+                    <option value="" disabled selected>Select a list to add to</option>
+                    <option value="Work">Work</option>
+                    <option value="School">School</option>
+                    <option value="Church">Church</option>
+                  </select>
+                </div>
+
+                <div id="edit-submitbtn-container">
+                  <button id="edit-submitbtn" type="submit">EDIT TODO</button>
+                </div>
+
+
+              </form>
+              <button id="modal-close">x</button>
             </div>
 
-            <div id="listSelectContainer">
-              <select id="listSelect" name="list">
-                <option value="" disabled selected>Select a list to add to</option>
-                <option value="Work">Work</option>
-                <option value="School">School</option>
-                <option value="Church">Church</option>
-              </select>
-            </div>
-
-
-            <div id="submitbtn-container">
-              <button id="submitbtn" type="submit">ADD TODO</button>
-            </div>
 
           </div>
-
-        </form>
-      </div>
-
+        </div>
 
 
     </div>
+    <div id="right">
+      <form id="addTodoForm">
+
+        <label for="addTodo"></label>
+          <input for="title" id="todoTitle" placeholder="TITLE">
+          <input for="description" id="description" type="textArea" placeholder="DESCRIPTION">
+          <label for="dueDate"></label>
+          <input for="dueDate" id="dueDate" type="date">
+
+          <div id="selectPriority">
+            <input for="low" type="radio" name="priority" value="low">Low
+            <input for="medium" type="radio" name="priority" value="medium">Medium
+            <input for="high" type="radio" checked="yes" name="priority" value="high">High
+          </div>
+
+          <div id="listSelectContainer">
+            <select id="listSelect" name="list">
+              <option value="" disabled selected>Select a list to add to</option>
+              <option value="Work">Work</option>
+              <option value="School">School</option>
+              <option value="Church">Church</option>
+            </select>
+          </div>
+
+
+          <div id="submitbtn-container">
+            <button id="submitbtn" type="submit">ADD TODO</button>
+          </div>
+
+      </form>
+    </div>
+    </div>
+  </div>
   </div>
 
-  <!-- <script src="../src/index.js"></script> -->
   <script src="bundle.js"></script>
 </body>
 </html>
