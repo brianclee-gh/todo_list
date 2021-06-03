@@ -5,6 +5,7 @@
   <meta charset="utf-8">
 
   <title>To Do List</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script defer src="../node_modules/@fortawesome/fontawesome-free/js/all.js"></script>
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap" rel="stylesheet">
@@ -35,14 +36,18 @@
         <div id="todoDisplay">
           <div id="taskHeader">
             <h2 id="listHeader">Work</h2>
-            <button id="sort-btn">Sort By</button>
-            <button id="clear-btn">Clear Completed</button>
+            <!-- <button id="sort-btn">Sort By</button> -->
+            <div id="header-btn-container">
+              <button id="sort-btn"><i class="fas fa-sort-amount-up"></i></button>
+              <button id="clear-btn"><i class="fas fa-trash-alt"></i></button>
+            </div>
+
           </div>
           <div id="tasklist"></div>
           <div id="mobile-add-container">
             <form id="mobile-add-form">
               <input for="title" id="mobileTitle" placeholder="What needs to be done?" />
-              <button id="mobile-submit">^</button>
+              <button id="mobile-submit"><i class="fas fa-arrow-circle-up"></i></button>
             </form>
           </div>
         </div>

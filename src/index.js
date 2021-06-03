@@ -155,9 +155,11 @@ const refreshCurrent = (display, list) => {
   }
 
   items.forEach((item) => {
-    display.appendChild(createTodoCard(item, list));
-  })
+    if (display.childNodes.length < 7) {
+      display.appendChild(createTodoCard(item, list));
+    }
 
+  })
 };
 
 const refreshAll = (display) => {
@@ -349,7 +351,10 @@ const updateTodo = (todoID) => {
 
 };
 
-
+const handleAddTodoMobile = (title) => {
+  const todo = new TodoItem(title);
+  currentList.addTodo(todo);
+};
 
 
 const addListeners = () => {
@@ -367,6 +372,19 @@ const addListeners = () => {
     addTodoForm.reset();
     populateStorage();
   });
+
+  const mobileAddForm = document.getElementById('mobile-add-form');
+  mobileAddForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const mobileTitle = returnFormValue('mobileTitle')
+    if (!mobileTitle) return;
+
+    handleAddTodoMobile(mobileTitle);
+    mobileAddForm.reset();
+
+    populateStorage();
+    refreshTodos();
+  })
 
   // edit Todo modal
   const editTodoForm = document.getElementById('modal-form');
