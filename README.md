@@ -1,13 +1,13 @@
 # To Do List
 ========
-<!-- 
-![Alt text](/example.png?raw=true "example screenshot") -->
+
+![Alt text](/example.png?raw=true "example screenshot")
 
 
 Features
 --------
 
-- A to do list built in Javascript
+- A to do list built in Javascript and CSS
 
 
 Things Learned
@@ -19,5 +19,4 @@ Things Learned
 To Add
 -------
 - Add new list categories
-- Edit items
-- Incorporate data saving with LocalStorage
+- Sort by function (A -> Z, by due date)
