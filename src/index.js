@@ -117,6 +117,17 @@ const handleAddTodoSubmit = () => {
 
 // VIEW
 
+
+const setListBackground = (listSelectors, listName) => {
+  listSelectors.forEach((node) => node.classList.remove('select'));
+  listSelectors.forEach((node) => {
+    if (node.dataset.list === listName) {
+      node.classList.add('select');
+    }
+
+  })
+}
+
 const changeListHeader = () => {
   const listHeader = document.getElementById('listHeader');
   listHeader.innerHTML = currentList.name;
@@ -408,8 +419,10 @@ const addListeners = () => {
   const listSelectors = document.querySelectorAll('.list-selector');
   addEventListenerList(listSelectors, 'click', function(e) {
     // set new currentList
-    currentList = (app.getList(e.target.dataset.list));
+    const listName = e.target.dataset.list;
+    currentList = (app.getList(listName));
     changeListHeader();
+    setListBackground(listSelectors, listName);
     // refresh todos
     refreshTodos();
     addCardListeners();

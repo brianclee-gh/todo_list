@@ -195,14 +195,16 @@ textarea {
 	color: #357a38;
 }
 
-[data-list="All"]:hover {
+[data-list="All"]:hover,
+.select[data-list="All"]  {
 	background-color: #357a3867;
 }
 
 [data-list="Work"] {
 	color: #ff5722;
 }
-[data-list="Work"]:hover {
+[data-list="Work"]:hover,
+.select[data-list="Work"] {
 	background-color: #ff562269;
 }
 
@@ -210,7 +212,8 @@ textarea {
 	color: #2196f3;
 }
 
-[data-list="School"]:hover {
+[data-list="School"]:hover,
+.select[data-list="School"] {
 	background-color: #2195f371;
 }
 
@@ -218,7 +221,8 @@ textarea {
 	color: #9c27b0;
 }
 
-[data-list="Church"]:hover {
+[data-list="Church"]:hover,
+.select[data-list="Church"] {
 	background-color: #9b27b05e;
 }
 
