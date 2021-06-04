@@ -71,6 +71,7 @@ class TodoItem {
   }
 
   setDueDate = (date) => {
+    console.log('set', date)
     this.dueDate = date;
   }
 

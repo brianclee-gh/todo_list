@@ -10,6 +10,7 @@ const formatDateEnding = (date) => {
 const checkToday = (date) => {
   const todaysDate = new Date();
   const inputDate = new Date(date);
+  console.log('creation', todaysDate, inputDate, date);
   return (todaysDate.setHours(0,0,0,0) == inputDate.setHours(0,0,0,0));
 };
 
