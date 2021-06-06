@@ -18,5 +18,6 @@ Things Learned
 
 To Add
 -------
-- Add new list categories
+- Remove lists from left side bar
+-
 - Sort by function (A -> Z, by due date)

@@ -17,6 +17,9 @@ const populateLeft = (app) => {
     listsLeft.setAttribute('class', 'listsLeft');
     const listsRight = document.createElement('div');
     listsRight.setAttribute('class', 'listsRight');
+    const listDelete = document.createElement('div');
+    listDelete.classList.add('delete-list')
+    listDelete.innerHTML = '<i class="far fa-minus-square"></i>';
 
     listsLeft.innerHTML = leftSVGLoader[list.name]
       ? leftSVGLoader[list.name]
@@ -28,6 +31,8 @@ const populateLeft = (app) => {
 
     container.appendChild(listsLeft);
     container.appendChild(listsRight);
+    if (list.name !== "All") container.appendChild(listDelete);
+
 
     listsBar.appendChild(container);
   });

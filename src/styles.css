@@ -178,6 +178,7 @@ textarea {
 	text-align: center;
 	display: flex;
 	justify-content: flex-start;
+	position: relative;
 }
 
 .listsLeft {
@@ -191,12 +192,31 @@ textarea {
 	pointer-events:none;
 }
 
+.delete-list {
+	display: none;
+	position: absolute;
+	right: 0;
+	background-color: #ff5722;
+	width: 30px;
+	height: auto;
+	color: white;
+	opacity: 0.8
+}
+
+.delete-list svg {
+	pointer-events:none;
+}
+
 .list-selector {
 	color: black;
 }
 
 .list-selector:hover {
 	background-color: rgba(0, 0, 0, 0.089);
+}
+
+.list-selector:hover > .delete-list {
+	display: block;
 }
 
 .select {
@@ -563,6 +583,7 @@ textarea {
 .form-lower {
 	justify-content: flex-end;
 	align-items:flex-end;
+	margin-top: 1rem;
 }
 
 #project-title {
@@ -580,7 +601,7 @@ textarea {
 }
 
 #modal {
-	display: block;
+	display: none;
 	flex-direction: column;
 	position: fixed;
 	top: 0;

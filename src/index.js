@@ -73,7 +73,6 @@ class TodoItem {
   }
 
   setDueDate = (date) => {
-    console.log('set', date)
     this.dueDate = date;
   }
 
@@ -132,6 +131,7 @@ const setListBackground = (listSelectors, listName) => {
 
 const changeListHeader = () => {
   const listHeader = document.getElementById('listHeader');
+  console.log(currentList);
   listHeader.innerHTML = currentList.name;
 };
 
@@ -380,23 +380,66 @@ const handleAddTodoMobile = (title) => {
 const handleAddList = (title) => {
   const list = new List(title);
   app.addList(list);
-  console.log(list, app);
 };
 
 
 const handleSubmitNewProject = () => {
   const title = returnFormValue('project-title')
-  console.log(title);
   if (title) {
     const newList = new List(title);
     app.addList(newList);
-    console.log(app)
     populateStorage();
     populateLeft(app);
+    populateListDropDown();
   }
 
 
 };
+
+const addDropdown = (node) => {
+  node.innerHTML = '';
+
+  let first = document.createElement('option');
+  first.value = "";
+  first.innerHTML = "Select Project to add to";
+  first.disabled = true;
+  first.selected = true;
+
+  node.appendChild(first);
+
+  app.lists.forEach(list => {
+    if (list.name === 'All') return;
+    let dd = document.createElement('option');
+    dd.value = list.name;
+    dd.innerHTML = list.name;
+    node.appendChild(dd);
+  })
+
+};
+
+const populateListDropDown = () => {
+  const editDD = document.getElementById('editListSelect');
+  const addDD = document.getElementById('listSelect');
+
+  addDropdown(editDD);
+  addDropdown(addDD);
+
+  deleteListListeners();
+};
+
+const deleteListListeners = () => {
+  const deleteList = document.querySelectorAll('.delete-list');
+  addEventListenerList(deleteList, 'click', function(e) {
+    const listName = e.target.closest('.list-selector').dataset.list;
+    if (window.confirm("Do you really want to delete this project?")) {
+      app.removeList(listName);
+      populateLeft(app);
+      populateListDropDown();
+      populateStorage();
+    }
+  })
+};
+
 
 const addListeners = () => {
 
@@ -444,7 +487,6 @@ const addListeners = () => {
   // add project modal
   const addProjectForm = document.getElementById('add-modal-form');
   addProjectForm.addEventListener('submit', function(e) {
-    console.log(e)
     e.preventDefault();
     const testModal = document.getElementById('add-project-modal');
     testModal.style.display = 'none';
@@ -463,6 +505,7 @@ const addListeners = () => {
   const listSelectors = document.querySelectorAll('.list-selector');
   addEventListenerList(listSelectors, 'click', function(e) {
     // set new currentList
+    if (e.target.classList[0] === 'delete-list') return;
     const listName = e.target.dataset.list;
     currentList = (app.getList(listName));
     changeListHeader();
@@ -543,6 +586,7 @@ const initialize = () => {
   refreshTodos();
   addListeners();
   addCardListeners();
+  populateListDropDown();
   populateStorage();
   tippyLoad();
 
@@ -575,5 +619,3 @@ const addSampleTodos = () => {
 let app;
 let currentList;
 initialize();
-
-
