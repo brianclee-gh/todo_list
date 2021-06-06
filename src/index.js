@@ -5,17 +5,19 @@ import { titleStrike, removeCard, paginate } from './modules/view'
 import { App } from './factories/app'
 import { List } from './factories/list'
 import { v4 as uuidv4 } from 'uuid'
-
+import tippy from 'tippy.js'
+import 'tippy.js/dist/tippy.css'
+import 'tippy.js/themes/material.css'
+import { tippyLoad, tippyCards } from './modules/tippy'
 
 // TODO:
 // High:
 // > Sort by (A -> Z, date)
 // Pages (~ 9 per page)
+// Add project (populate dd lists)
+// Remove project
 
-// Low
-// > "Today"
-
-// LS
+// Local Storage
 
 const storageAvailable = (type) => {
   var storage;
@@ -192,8 +194,8 @@ const handleCheckboxClick = (todoID) => {
   todo.toggleDone();
 };
 
-const showModal = () => {
-  const modal = document.getElementById('modal');
+const showModal = (id) => {
+  const modal = document.getElementById(id);
   modal.style.display = 'flex';
 };
 
@@ -292,9 +294,14 @@ const handleEditTodo = (node) => {
   const targetList = app.lists.find((list) => list.name === listID);
   const targetItem = targetList.items.find(item => item.uuid === todoID);
 
-  showModal();
+  showModal('modal');
   populateModal(targetItem);
 };
+
+const handleAddProject = () => {
+  showModal('add-project-modal');
+};
+
 
 // INITIAL
 
@@ -335,6 +342,8 @@ const addCardListeners = () => {
     const parent = e.target.closest('.todoCard');
     parent.classList.toggle('expanded');
   })
+
+  tippyCards();
 };
 
 const getTodoItem = (todoID) => {
@@ -368,6 +377,26 @@ const handleAddTodoMobile = (title) => {
   currentList.addTodo(todo);
 };
 
+const handleAddList = (title) => {
+  const list = new List(title);
+  app.addList(list);
+  console.log(list, app);
+};
+
+
+const handleSubmitNewProject = () => {
+  const title = returnFormValue('project-title')
+  console.log(title);
+  if (title) {
+    const newList = new List(title);
+    app.addList(newList);
+    console.log(app)
+    populateStorage();
+    populateLeft(app);
+  }
+
+
+};
 
 const addListeners = () => {
 
@@ -384,6 +413,11 @@ const addListeners = () => {
     addTodoForm.reset();
     populateStorage();
   });
+
+  const addListBtn = document.getElementById('add-list-btn');
+  addListBtn.addEventListener('click', function() {
+    handleAddProject();
+  })
 
   const mobileAddForm = document.getElementById('mobile-add-form');
   mobileAddForm.addEventListener('submit', function(e) {
@@ -405,6 +439,16 @@ const addListeners = () => {
     modal.style.display = 'none';
     handleEditTodoSubmit();
 
+  })
+
+  // add project modal
+  const addProjectForm = document.getElementById('add-modal-form');
+  addProjectForm.addEventListener('submit', function(e) {
+    console.log(e)
+    e.preventDefault();
+    const testModal = document.getElementById('add-project-modal');
+    testModal.style.display = 'none';
+    handleSubmitNewProject();
   })
 
   // search
@@ -437,14 +481,24 @@ const addListeners = () => {
   })
 
   const closeModalBtn = document.getElementById('modal-close');
+  const closeAddModalBtn = document.getElementById('close-add-modal');
+  closeAddModalBtn.addEventListener('click', function() {
+    const testModal = document.getElementById('add-project-modal')
+    testModal.style.display = 'none';
+  })
+
   closeModalBtn.addEventListener('click', function() {
     modal.style.display = 'none';
   })
 
   window.onclick = function(event) {
-    if (event.target == modal) {
+    const testModal = document.getElementById('add-project-modal')
+    if (event.target == modal || event.target == testModal) {
       modal.style.display = "none";
+      testModal.style.display = 'none';
+
     }
+
   }
 
 };
@@ -490,6 +544,7 @@ const initialize = () => {
   addListeners();
   addCardListeners();
   populateStorage();
+  tippyLoad();
 
 };
 

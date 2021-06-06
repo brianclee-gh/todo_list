@@ -29,14 +29,26 @@
 
     <div id="main">
       <div id="left">
+        <button id='removeMe'>???</button>
         <div id="lists">
         </div>
+        <div id='add-list-container'>
+          <button id="add-list-btn">
+            <i class="fas fa-plus"></i> <span>New Project</span>
+          </button>
+        </div>
+
+        <!-- <div id="list-add-container">
+          <form id="list-add-form">
+            <input for="newList" id="listTitle" placeholder="New List" />
+
+          </form>
+        </div> -->
       </div>
       <div id="center">
         <div id="todoDisplay">
           <div id="taskHeader">
             <h2 id="listHeader">Work</h2>
-            <!-- <button id="sort-btn">Sort By</button> -->
             <div id="header-btn-container">
               <button id="sort-btn"><i class="fas fa-sort-amount-up"></i></button>
               <button id="clear-btn"><i class="fas fa-trash-alt"></i></button>
@@ -54,38 +66,73 @@
         <div id="modal">
           <div id="modal-content">
             <div id="modal-container">
+              <div id="modal-header">
+                <h3>Edit Task</h3>
+                <button id="modal-close">x</button>
+              </div>
               <form id="modal-form">
-                <label for="editTodo"></label>
-                <div id="todoEditing"></div>
-                <input for="title" id="editTitle" placeholder="TITLE">
-                <input for="description" id="editDescription" type="textArea" placeholder="DESCRIPTION">
-                <label for="dueDate"></label>
-                <input for="dueDate" id="editDueDate" type="datetime-local">
+                <div class="edit-form-upper">
+                  <label for="editTodo"></label>
+                  <div id="todoEditing"></div>
+                  <label for="title">Name:</label>
+                  <input for="title" id="editTitle" placeholder="">
+                  <label for="description">Description:</label>
+                  <input for="description" id="editDescription" type="textArea" placeholder="">
+                  <label for="dueDate">Date:</label>
+                  <input for="dueDate" id="editDueDate" type="datetime-local">
 
-                <div id="editPriority">
-                  <input for="low" type="radio" name="editPriority" value="low">Low
-                  <input for="medium" type="radio" name="editPriority" value="medium">Medium
-                  <input for="high" type="radio" checked="yes" name="editPriority" value="high">High
+                  <label for="editPriority">Priority:</label>
+                  <div id="editPriority">
+                    <input for="low" type="radio" name="editPriority" value="low">Low
+                    <input for="medium" type="radio" name="editPriority" value="medium">Medium
+                    <input for="high" type="radio" checked="yes" name="editPriority" value="high">High
+                  </div>
+
+                  <label for="list-select">Project: </label>
+                  <div id="listEditContainer">
+                    <select id="editListSelect" name="list">
+                      <option value="" disabled selected>Select a list to add to</option>
+                      <option value="Work">Work</option>
+                      <option value="School">School</option>
+                      <option value="Church">Church</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="edit-form-lower">
+                  <div id="edit-submitbtn-container">
+                    <button id="edit-submitbtn" type="submit">EDIT TODO</button>
+                  </div>
+
                 </div>
 
-                <div id="listEditContainer">
-                  <select id="editListSelect" name="list">
-                    <option value="" disabled selected>Select a list to add to</option>
-                    <option value="Work">Work</option>
-                    <option value="School">School</option>
-                    <option value="Church">Church</option>
-                  </select>
-                </div>
-
-                <div id="edit-submitbtn-container">
-                  <button id="edit-submitbtn" type="submit">EDIT TODO</button>
-                </div>
 
 
               </form>
-              <button id="modal-close">x</button>
+
             </div>
 
+
+          </div>
+        </div>
+        <div id="add-project-modal">
+          <div id="add-modal-content">
+
+            <div id="add-modal-container">
+              <div id="add-modal-header">
+                <h3>New Project</h3>
+                <button id="close-add-modal">x</button>
+              </div>
+              <form id="add-modal-form">
+                <div class="form-upper">
+                  <label>Project Name: </label>
+                  <input for="project-title" id="project-title" placeholder="">
+                </div>
+                <div class="form-lower">
+                  <button id="add-submitbtn" type="submit">Add</button>
+                </div>
+              </form>
+
+            </div>
 
           </div>
         </div>
@@ -126,6 +173,9 @@
     </div>
   </div>
   </div>
+
+  <script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.min.js"></script>
+  <script src="https://unpkg.com/tippy.js@6/dist/tippy-bundle.umd.js"></script>
 
   <script src="bundle.js"></script>
 </body>

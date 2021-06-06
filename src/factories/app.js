@@ -26,6 +26,16 @@ class App {
       return this.lists.find((list) => list.name === listName);
     }
 
+    this.removeList = (listName) => {
+      for (let i = 0; i < this.lists.length; i++) {
+        if (this.lists[i].name === listName) {
+          this.lists.splice(i, 1);
+          console.log('gone?')
+        }
+      }
+      console.log(this.lists);
+    }
+
 
   }
 }

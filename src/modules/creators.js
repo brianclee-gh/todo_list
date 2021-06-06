@@ -2,11 +2,13 @@ const leftSVGLoader = {
   'All': `<i class="far fa-compass"></i>`,
   'Church': `<i class="fas fa-church"></i>`,
   'School': `<i class="fas fa-school"></i>`,
-  'Work': `<i class="fas fa-briefcase"></i>`
+  'Work': `<i class="fas fa-briefcase"></i>`,
+  default: '<i class="fas fa-tasks"></i>',
 };
 
 const populateLeft = (app) => {
   const listsBar = document.getElementById('lists');
+  listsBar.innerHTML = '';
 
   app.lists.forEach((list) => {
     const container = document.createElement('div');
@@ -16,7 +18,9 @@ const populateLeft = (app) => {
     const listsRight = document.createElement('div');
     listsRight.setAttribute('class', 'listsRight');
 
-    listsLeft.innerHTML = leftSVGLoader[list.name];
+    listsLeft.innerHTML = leftSVGLoader[list.name]
+      ? leftSVGLoader[list.name]
+      : leftSVGLoader.default ;
     listsRight.innerHTML = list.name;
 
     container.setAttribute('class', 'list-selector');
