@@ -1,7 +1,8 @@
 import { getCheckedRadio, returnFormValue, printTarget, addEventListenerList } from './modules/helpers'
 import { createCardBtns, createTodoCard } from './modules/cardHelpers'
-import { populateLeft, createDropdown } from './modules/creators'
-import { titleStrike, removeCard, paginate } from './modules/view'
+import { populateLeft } from './modules/creators'
+import { transferTodo } from './modules/model'
+import { titleStrike, removeCard, paginate, setListBackground, changeSearchHeader, showModal } from './modules/view'
 import { App } from './factories/app'
 import { List } from './factories/list'
 import { v4 as uuidv4 } from 'uuid'
@@ -11,11 +12,8 @@ import 'tippy.js/themes/material.css'
 import { tippyLoad, tippyCards } from './modules/tippy'
 
 // TODO:
-// High:
 // > Sort by (A -> Z, date)
 // Pages (~ 9 per page)
-// Add project (populate dd lists)
-// Remove project
 
 // Local Storage
 
@@ -116,22 +114,41 @@ const handleAddTodoSubmit = () => {
 
 };
 
+const handleAddTodoMobile = (title) => {
+  const todo = new TodoItem(title);
+  currentList.addTodo(todo);
+};
+
+const handleAddList = (title) => {
+  const list = new List(title);
+  app.addList(list);
+};
+
+
+const handleSubmitNewProject = () => {
+  const title = returnFormValue('project-title')
+  if (title) {
+    const newList = new List(title);
+    app.addList(newList);
+    populateStorage();
+    populateLeft(app);
+    populateListDropDown();
+    addLeftListeners();
+  }
+};
+
+const handleEditTodoSubmit = () => {
+  const todoID = document.getElementById('todoEditing').getAttribute('data-todo');
+  updateTodo(todoID);
+  refreshTodos();
+  addCardListeners();
+  populateStorage();
+};
+
 // VIEW
-
-
-const setListBackground = (listSelectors, listName) => {
-  listSelectors.forEach((node) => node.classList.remove('select'));
-  listSelectors.forEach((node) => {
-    if (node.dataset.list === listName) {
-      node.classList.add('select');
-    }
-
-  })
-}
 
 const changeListHeader = () => {
   const listHeader = document.getElementById('listHeader');
-  console.log(currentList);
   listHeader.innerHTML = currentList.name;
 };
 
@@ -142,11 +159,6 @@ const refreshTodos = () => {
   if (currentList.name === 'All') { refreshAll(display) }
   if (currentList.name !== 'All') { refreshCurrent(display, currentList) }
 
-};
-
-const changeSearchHeader = (phrase) => {
-  const listHeader = document.getElementById('listHeader');
-  listHeader.innerHTML = 'Results for ' + phrase;
 };
 
 const refreshSearch = (results) => {
@@ -194,11 +206,6 @@ const handleCheckboxClick = (todoID) => {
   todo.toggleDone();
 };
 
-const showModal = (id) => {
-  const modal = document.getElementById(id);
-  modal.style.display = 'flex';
-};
-
 const populateModal = (todo) => {
   const modal = document.getElementById('modal-form');
   document.getElementById('todoEditing').setAttribute('data-todo', todo.uuid);
@@ -206,7 +213,13 @@ const populateModal = (todo) => {
 
 };
 
+const getTodoItem = (todoID) => {
+  const targetList = findTodoList(todoID);
+  return targetList.items.find(item => item.uuid === todoID);
+};
+
 // Model
+
 
 const removeCompleted = () => {
 
@@ -228,10 +241,35 @@ const handleListChange = (todoID, targetTodo, selectedList) => {
 
 };
 
-const transferTodo = (list1, list2, todo) => {
-  list1.addTodo(todo);
-  list2.deleteTodo(todo.uuid);
+const findTodoList = (todoID) => {
+  return app.lists.find((list) => {
+    if (list.items.find(item => item.uuid === todoID)) {
+      return list;
+    }
+  })
 };
+
+const deleteItem = (todoID) => {
+  const targetList = findTodoList(todoID);
+  targetList.deleteTodo(todoID);
+};
+
+const handleEditTodo = (node) => {
+  const todoID = node.getAttribute('data-uuid');
+  const listID = node.getAttribute('data-parentList');
+  const targetList = app.lists.find((list) => list.name === listID);
+  const targetItem = targetList.items.find(item => item.uuid === todoID);
+
+  showModal('modal');
+  populateModal(targetItem);
+};
+
+const handleAddProject = () => {
+  showModal('add-project-modal');
+};
+
+
+// Search
 
 const handleSearch = () => {
   const search = returnFormValue('searchInput');
@@ -275,32 +313,6 @@ const regexSearch = () => {
 
 };
 
-const findTodoList = (todoID) => {
-  return app.lists.find((list) => {
-    if (list.items.find(item => item.uuid === todoID)) {
-      return list;
-    }
-  })
-};
-
-const deleteItem = (todoID) => {
-  const targetList = findTodoList(todoID);
-  targetList.deleteTodo(todoID);
-};
-
-const handleEditTodo = (node) => {
-  const todoID = node.getAttribute('data-uuid');
-  const listID = node.getAttribute('data-parentList');
-  const targetList = app.lists.find((list) => list.name === listID);
-  const targetItem = targetList.items.find(item => item.uuid === todoID);
-
-  showModal('modal');
-  populateModal(targetItem);
-};
-
-const handleAddProject = () => {
-  showModal('add-project-modal');
-};
 
 
 // INITIAL
@@ -346,19 +358,6 @@ const addCardListeners = () => {
   tippyCards();
 };
 
-const getTodoItem = (todoID) => {
-  const targetList = findTodoList(todoID);
-  return targetList.items.find(item => item.uuid === todoID);
-};
-
-const handleEditTodoSubmit = () => {
-  const todoID = document.getElementById('todoEditing').getAttribute('data-todo');
-  updateTodo(todoID);
-  refreshTodos();
-  addCardListeners();
-  populateStorage();
-};
-
 const updateTodo = (todoID) => {
   // updates target todo with edit form submission
 
@@ -372,29 +371,8 @@ const updateTodo = (todoID) => {
 
 };
 
-const handleAddTodoMobile = (title) => {
-  const todo = new TodoItem(title);
-  currentList.addTodo(todo);
-};
-
-const handleAddList = (title) => {
-  const list = new List(title);
-  app.addList(list);
-};
 
 
-const handleSubmitNewProject = () => {
-  const title = returnFormValue('project-title')
-  if (title) {
-    const newList = new List(title);
-    app.addList(newList);
-    populateStorage();
-    populateLeft(app);
-    populateListDropDown();
-  }
-
-
-};
 
 const addDropdown = (node) => {
   node.innerHTML = '';
@@ -435,11 +413,26 @@ const deleteListListeners = () => {
       app.removeList(listName);
       populateLeft(app);
       populateListDropDown();
+      addLeftListeners();
       populateStorage();
     }
   })
 };
 
+const addLeftListeners = () => {
+  const listSelectors = document.querySelectorAll('.list-selector');
+  addEventListenerList(listSelectors, 'click', function(e) {
+    // set new currentList
+    if (e.target.classList[0] === 'delete-list') return;
+    const listName = e.target.dataset.list;
+    currentList = (app.getList(listName));
+    changeListHeader();
+    setListBackground(listSelectors, listName);
+    // refresh todos
+    refreshTodos();
+    addCardListeners();
+  });
+}
 
 const addListeners = () => {
 
@@ -501,20 +494,6 @@ const addListeners = () => {
     searchBar.reset();
   })
 
-  // select active list on left
-  const listSelectors = document.querySelectorAll('.list-selector');
-  addEventListenerList(listSelectors, 'click', function(e) {
-    // set new currentList
-    if (e.target.classList[0] === 'delete-list') return;
-    const listName = e.target.dataset.list;
-    currentList = (app.getList(listName));
-    changeListHeader();
-    setListBackground(listSelectors, listName);
-    // refresh todos
-    refreshTodos();
-    addCardListeners();
-  });
-
   //clear completed
   const clearBtn = document.getElementById('clear-btn');
   clearBtn.addEventListener('click', function() {
@@ -523,13 +502,14 @@ const addListeners = () => {
     }
   })
 
-  const closeModalBtn = document.getElementById('modal-close');
+
   const closeAddModalBtn = document.getElementById('close-add-modal');
   closeAddModalBtn.addEventListener('click', function() {
     const testModal = document.getElementById('add-project-modal')
     testModal.style.display = 'none';
   })
 
+  const closeModalBtn = document.getElementById('modal-close');
   closeModalBtn.addEventListener('click', function() {
     modal.style.display = 'none';
   })
@@ -587,6 +567,7 @@ const initialize = () => {
   addListeners();
   addCardListeners();
   populateListDropDown();
+  addLeftListeners();
   populateStorage();
   tippyLoad();
 

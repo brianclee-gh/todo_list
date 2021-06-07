@@ -829,4 +829,5 @@ textarea {
 		margin-left: 0;
 	}
 	#add-list-container span { display: none }
+	.list-selector:hover > .delete-list { width: 50%; }
 }
