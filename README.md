@@ -1,7 +1,7 @@
 # To Do List
 ========
 
-![Alt text](/example2.png?raw=true "example screenshot")
+![Alt text](/example.png?raw=true "example screenshot")
 
 
 Features
