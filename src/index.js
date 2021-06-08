@@ -466,6 +466,7 @@ const addListeners = () => {
 
     populateStorage();
     refreshTodos();
+    addCardListeners();
   })
 
   // edit Todo modal
