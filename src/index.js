@@ -313,8 +313,6 @@ const regexSearch = () => {
 
 };
 
-
-
 // INITIAL
 
 const addCardListeners = () => {
@@ -370,9 +368,6 @@ const updateTodo = (todoID) => {
   if (selectedList !== '') handleListChange(todoID, targetTodo, selectedList);
 
 };
-
-
-
 
 const addDropdown = (node) => {
   node.innerHTML = '';
@@ -526,8 +521,6 @@ const addListeners = () => {
   }
 
 };
-
-
 
 const initialize = () => {
 

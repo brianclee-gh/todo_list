@@ -5,7 +5,8 @@
   "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack"
+    "build": "webpack",
+    "start": "node ./server/index.js"
   },
   "keywords": [],
   "author": "",
@@ -18,7 +19,10 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.15.3",
+    "compression": "^1.7.4",
+    "express": "^4.17.1",
     "lodash": "^4.17.20",
+    "morgan": "^1.10.0",
     "tippy.js": "^6.3.1",
     "uuid": "^8.3.2"
   }
