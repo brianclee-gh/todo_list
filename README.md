@@ -33,7 +33,8 @@ code blocks for commands
 
 ## Authors
 
-Brian Lee[@brianclee-gh](https://github.com/brianclee-gh)
+Brian Lee
+[@brianclee-gh](https://github.com/brianclee-gh)
 
 ## Version History
 
