@@ -1,14 +1,14 @@
-import express, { static } from 'express';
-import compression from 'compression';
-import morgan from 'morgan';
-import path from 'path';
+const express = require('express');
+const compression = require('compression');
+const morgan = require('morgan');
+const path = require('path');
 
 const app = express();
 module.exports.app = app;
 
 app.use(compression());
 app.use(morgan('dev'));
-app.use(static(`${__dirname}/../dist/index.html`));
+app.use(express.static(`${__dirname}/../dist/`));
 
 const PORT = 3000;
 

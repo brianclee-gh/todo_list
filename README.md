@@ -16,14 +16,13 @@ A to-do list built in Javascript, HTML, and CSS.
 
 ```
 npm install
+npm run build
 ```
 
 ### Executing program
 
-* How to run the program
-* Step-by-step bullets
 ```
-code blocks for commands
+npm start
 ```
 
 ### Future Features

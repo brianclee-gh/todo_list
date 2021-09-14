@@ -119,10 +119,12 @@ const createCardBtns = () => {
 
   const editBtn = document.createElement('button');
   editBtn.setAttribute('class', 'editBtn btn');
-  editBtn.innerHTML = `<i class="far fa-edit"></i>`;
+  // editBtn.innerHTML = `<i class="far fa-edit"></i>`;
+  editBtn.innerHTML = 'Edit';
   const deleteBtn = document.createElement('button');
   deleteBtn.setAttribute('class', 'deleteBtn btn');
-  deleteBtn.innerHTML = `<i class="far fa-trash-alt"></i>`;
+  // deleteBtn.innerHTML = `<i class="far fa-trash-alt"></i>`;
+  deleteBtn.innerHTML = 'Del'
   buttons.appendChild(editBtn);
   buttons.appendChild(deleteBtn);
 
